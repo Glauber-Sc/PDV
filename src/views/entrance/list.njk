@@ -1,0 +1,154 @@
+{# {% extends "layout.njk" %}
+
+{% block head %}
+    <title>Entradas</title>
+    <link rel="stylesheet" href="entrance.css"/>
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Entradas</h4>
+            </div>
+            <div class="col-md-6 box-balance">
+                <strong class="sales">Vendas: {{ entrances.length }}
+                </strong>
+                <strong class="balance">Total: {{ total }}</strong>
+            </div>
+        </div>
+
+        <form class="search" action="/entrancesdate" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Data Inicial</label>
+                    <input id="startDate" value="{{startDate}}" class="form-control" type="date" name="startDate"/>
+                </div>
+                <div class="col-md-3">
+                    <label for="finalDate" class="form-label">Data final</label>
+                    <input id="finalDate" value="{{finalDate}}" class="form-control" type="date" name="finalDate"/>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <br/>
+                    <button class="btn btn-primary " type="submit">Pesquisar</button>
+                    {% if dateFilter != false %}
+                        <a href="/entrances" class="btn btn-secondary">Limpar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Tipo de Entrada</th>
+                <th>Valor</th>
+                <th>Data</th>
+            </tr>
+            {% for entrance in entrances %}
+                {% if entrance != null %}
+                    <tr>
+                        <td>
+                            <a href="#">Venda</a>
+                        </td>
+                        <td>{{ entrance.formattedValue }}</td>
+                        <td>{{ entrance.formattedDate }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+        <!-- Adicione isso onde deseja exibir a paginação -->
+        <div class="pagination">
+            {% if totalPages > 1 %}
+                <a href="/entrances?page=1&startDate={{ startDate }}&finalDate={{ finalDate }}" class="first">&lt;&lt;</a>
+                <a href="/entrances?page={{ currentPage - 1 }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="prev" {% if currentPage <= 1 %}style="pointer-events: none; color: #ddd;"{% endif %}>&lt;</a>
+
+                {% for page in range(1, totalPages + 1) %}
+                    <a href="/entrances?page={{ page }}&startDate={{ startDate }}&finalDate={{ finalDate }}" {% if page == currentPage %}class="active"{% endif %}>{{ page }}</a>
+                {% endfor %}
+
+                <a href="/entrances?page={{ currentPage + 1 }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="next" {% if currentPage >= totalPages %}style="pointer-events: none; color: #ddd;"{% endif %}>&gt;</a>
+                <a href="/entrances?page={{ totalPages }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="last">&gt;&gt;</a>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %} #}
+
+
+{% extends "layout.njk" %}
+
+{% block head %}
+    <title>Entradas</title>
+    <link rel="stylesheet" href="entrance.css"/>
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Entradas</h4>
+            </div>
+            <div class="col-md-6 box-balance">
+                <strong class="sales">Vendas: {{ entrances.length }}
+                </strong>
+                <strong class="balance">Total: {{ total }}</strong>
+            </div>
+        </div>
+
+        <form class="search" action="/entrancesdate" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Data Inicial</label>
+                    <input id="startDate" value="{{startDate}}" class="form-control" type="date" name="startDate"/>
+                </div>
+                <div class="col-md-3">
+                    <label for="finalDate" class="form-label">Data final</label>
+                    <input id="finalDate" value="{{finalDate}}" class="form-control" type="date" name="finalDate"/>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <br/>
+                    <button class="btn btn-primary " type="submit">Pesquisar</button>
+                    {% if dateFilter != false %}
+                        <a href="/entrances" class="btn btn-secondary">Limpar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Tipo de Entrada</th>
+                <th>Valor</th>
+                <th>Data</th>
+            </tr>
+            {% for entrance in entrances %}
+                {% if entrance != null %}
+                    <tr>
+                        <td>
+                            <a href="#">Venda</a>
+                        </td>
+                        <td>{{ entrance.formattedValue }}</td>
+                        <td>{{ entrance.formattedDate }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+        <!-- Adicione isso onde deseja exibir a paginação -->
+        <div class="pagination">
+            {% if totalPages > 1 %}
+                <a href="/entrances?page=1&startDate={{ startDate }}&finalDate={{ finalDate }}" class="first">&lt;&lt;</a>
+                <a href="/entrances?page={{ currentPage - 1 }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="prev" {% if currentPage <= 1 %}style="pointer-events: none; color: #ddd;"{% endif %}>&lt;</a>
+
+                {% for page in range(1, totalPages + 1) %}
+                    <a href="/entrances?page={{ page }}&startDate={{ startDate }}&finalDate={{ finalDate }}" {% if page == currentPage %}class="active"{% endif %}>{{ page }}</a>
+                {% endfor %}
+
+                <a href="/entrances?page={{ currentPage + 1 }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="next" {% if currentPage >= totalPages %}style="pointer-events: none; color: #ddd;"{% endif %}>&gt;</a>
+                <a href="/entrances?page={{ totalPages }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="last">&gt;&gt;</a>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

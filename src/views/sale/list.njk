@@ -1,0 +1,206 @@
+{# {% extends "layout.njk" %}
+
+{% block head %}
+    <title>Vendas</title>
+    <link rel="stylesheet" href="/sale.css"/>
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Vendas</h4>
+            </div>
+            <div class="col-md-6 box-balance">
+                <strong class="sales">Vendas: {{ sales.length }} </strong>
+                <strong class="balance">Total: {{ total }}</strong>
+            </div>
+        </div>
+
+        <form class="search" action="/salesdates" method="post">
+            <div class="row">            
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Data Inicial</label>
+                    <input id="startDate" value="{{startDate}}" class="form-control" type="date" name="startDate" />
+                </div>
+                <div class="col-md-4">
+                    <label for="finalDate" class="form-label">Data final</label>
+                    <input id="finalDate" value="{{finalDate}}" class="form-control" type="date" name="finalDate" />
+                    </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary bnt-exit" type="submit">Pesquisar</button>
+                    {% if dateFilter != false %}
+                        <a href="/sales" class="btn btn-secondary">Limpar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        <div class="row box-sale-row">
+            {% for sale in sales %}
+                {% if sale != null %}
+                    <div class="box-sale col-md-3">
+                        <div class="header"> 
+                            <div class="">
+                                <strong class="data">{{ sale.formattedDate }}</strong>
+                            </div>
+                        
+                            <div class="total">
+                                <strong>Total: {{ sale.sale.formattedTotal }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="box-descount">
+                            <strong>Desconto: {{sale.sale.descount}} %</strong>
+                        </div>
+
+                        <div class="row box-button">
+                            <form  action="/sales/delete/{{sale._id}}?_method=DELETE" method="POST" onSubmit="deleteSale(event)">
+                                <button class="btn btn-danger button-delete">Deletar</button>
+                            </form>
+                        </div>
+                        
+                        {% for product in sale.sale.products %}
+                                <div class="data-product">
+                                    <strong>{{product.product.name}}</strong>
+                                    <strong>QTD: {{product.quantity}}</strong>
+                                    <strong>Valor: {{product.formattedPrice}}</strong>
+                                </div>  
+                            
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+<script>
+    function deleteSale(e) {
+        if(!window.confirm("Deseja realmente deletar essa venda ?")) {
+            e.returnValue = false; 
+        }
+    }
+</script>
+{% endblock %}         #}
+
+{% extends "layout.njk" %}
+
+{% block head %}
+    <title>Vendas</title>
+    <link rel="stylesheet" href="/sale.css"/>
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Vendas</h4>
+            </div>
+            <div class="col-md-6 box-balance">
+                <strong class="sales">Vendas: {{ sales.length }}
+                </strong>
+                <strong class="balance">Total: {{ total }}</strong>
+            </div>
+        </div>
+
+        <form class="search" action="/salesdates" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Data Inicial</label>
+                    <input id="startDate" value="{{startDate}}" class="form-control" type="date" name="startDate"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="finalDate" class="form-label">Data final</label>
+                    <input id="finalDate" value="{{finalDate}}" class="form-control" type="date" name="finalDate"/>
+                </div>
+                <div class="col-md-4">
+                    <br/>
+                    <button class="btn btn-primary bnt-exit mt-2 mb-1" type="submit">Pesquisar</button>
+                    {% if dateFilter != false %}
+                        <a href="/sales" class="btn btn-secondary mt-1">Limpar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        <div class="row box-sale-row">
+            {% for sale in sales %}
+                {% if sale != null %}
+                    <div class="box-sale col-md-3">
+                        <div class="header">
+                            <div class="">
+                                <strong class="data">{{ sale.formattedDate }}</strong>
+                            </div>
+
+                            <div class="total">
+                                <strong>Total: {{ sale.formattedTotal }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="box-descount">
+                            <strong>Desconto: {{sale.sale.descount}} %</strong>
+                        </div>
+
+                        <div class="row box-button">
+                            <form  onclick="deleteSale('{{ sale.id }}')">
+                                <button class="btn btn-danger button-delete">Deletar</button>
+                            </form>
+
+                        </div>
+
+                        {% for product in sale.sale.products %}
+                            <div class="data-product">
+                                <strong>Nome: {{ product.product.name }}</strong>
+                                <strong>Quantidade: {{ product.quantity }}</strong>
+                                <strong>Valor: {{ product.formattedPrice }}</strong>
+                            </div>
+                            {% if product.product.name %}
+                                <script>
+                                    console.log("Product Name: {{ product.product.name }}");
+                                </script>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {% if totalPages > 1 %}
+                <a href="/sales?page=1&startDate={{ startDate }}&finalDate={{ finalDate }}" class="first">&lt;&lt;</a>
+                <a href="/sales?page={{ currentPage - 1 }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="prev" {% if currentPage <= 1 %}style="pointer-events: none; color: #ddd;"{% endif %}>&lt;</a>
+
+                {% for page in range(1, totalPages + 1) %}
+                    <a href="/sales?page={{ page }}&startDate={{ startDate }}&finalDate={{ finalDate }}" {% if page == currentPage %}class="active"{% endif %}>{{ page }}</a>
+                {% endfor %}
+
+                <a href="/sales?page={{ currentPage + 1 }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="next" {% if currentPage >= totalPages %}style="pointer-events: none; color: #ddd;"{% endif %}>&gt;</a>
+                <a href="/sales?page={{ totalPages }}&startDate={{ startDate }}&finalDate={{ finalDate }}" class="last">&gt;&gt;</a>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        function deleteSale(saleId) {
+            if (window.confirm("Deseja realmente deletar essa venda?")) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('DELETE', `/sales/delete/${saleId}`, true);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        window
+                            .location
+                            .reload();
+                    } else {
+                        console.error('Erro ao deletar venda:', xhr.statusText);
+                    }
+                };
+                xhr.send();
+            }
+        }
+    </script>
+
+{% endblock %}
